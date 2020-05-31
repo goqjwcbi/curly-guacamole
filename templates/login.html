@@ -1,14 +1,18 @@
 <head>
-  <title> LOGIN </title>
+  <title> LOGIN </title> 
+  <link rel="stylesheet" href="/login.css">
+
 </head>
 
 <body>
-
+  <div id = "main">
   <h1> login </h1>
   
-  <form action="/login" method="post">
-	Username: <input name="username" type="text" /> <br>
-	Password: <input name="password" type="password" /> <br>
-	<input type="submit" />
+  <form  action="/login" method="post">
+	Username: <input id = "username" name="username" type="text" /> <br>
+	Password: <input id = "password" name="password" type="password" /> <br>
+  <br>
+  <input value = "login" id = "button" type="submit" />
   </form>
+</div>
 </body>

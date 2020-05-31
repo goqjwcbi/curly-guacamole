@@ -1,14 +1,18 @@
 <head>
-  <title> REGSITER </title>
+  <title> Register </title> 
+  <link rel="stylesheet" href="/login.css">
+
 </head>
 
 <body>
-
+  <div id = "main">
   <h1> register </h1>
   
-  <form action="/register" method="post">
-	Username: <input name="username" type="text" /> <br>
-	Password: <input name="password" type="password" /> <br>
-	<input type="submit" />
+  <form  action="/register" method="post">
+	Username: <input id = "username" name="username" type="text" /> <br>
+	Password: <input id = "password" name="password" type="password" /> <br>
+  <br>
+  <input value = "register" id = "button" type="submit" />
   </form>
+</div>
 </body>
