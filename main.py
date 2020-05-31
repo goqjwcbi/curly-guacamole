@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import *
 import sqlite3
 import hashlib
 
@@ -7,21 +7,25 @@ app = Flask(__name__,
             static_folder='static')
 
 
-@app.route("/")
+@app.route("/", methods = ["GET"])
 def index():
     if 'user' in session:
         return "welcome %s" % session['user']
     else:
         return render_template("index.html")
+
+@app.route("/p/<page>")
+def visit_page(page):
+    return render_template(page)
     
 @app.route("/login", methods = ["GET", "POST"])
 def login():
-    if method == "POST":
+    if request.method == "POST":
         username = request.args.get("username")
         password = hashlib.sha256(request.args.get("password")).hexdigest()
-
-        c = sqlite.conn("guacamole.db").cursor()
-        query = "SELECT username FROM users WHERE name = ? AND password = ?"
+        conn = sqlite3.connect("guacamole.db")
+        c = conn.cursor()
+        query = "SELECT username FROM users WHERE username = ? AND password = ?"
         c.execute(query, username, password)
         data = c.fetchone()
         if data == None:
@@ -34,12 +38,13 @@ def login():
         
 @app.route("/register", methods = ["GET", "POST"])
 def register():
-    if method == "POST":
+    if request.method == "POST":
         username = request.args.get("username")
         password = request.args.get("password")
         if not check_user_exists(username):
             query = "INSERT INTO users VALUES (?, ?)"
-            c = sqlite.conn("guacamole.db").cursor()
+            conn = sqlite3.connect("guacamole.db")
+            c = conn.cursor()
             c.execute(query, username, password)
             redirect(url_for(""))
         else:
@@ -52,8 +57,9 @@ def error(e):
     return render_template("error.html", error = e)
             
 def check_user_exists(username):
-    c = sqlite.conn().cursor()
-    query = "SELECT username FROM users WHERE name = ?"
+    conn = sqlite3.connect("guacamole.db")
+    c = conn.cursor()
+    query = "SELECT username FROM users WHERE username = ?"
     c.execute(query, username)
     data = c.fetchone()
     if data == None:
