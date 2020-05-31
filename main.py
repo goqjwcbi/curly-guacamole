@@ -6,8 +6,6 @@ app = Flask(__name__,
             static_url_path='',
             static_folder='static')
 
-if __name__ == '__main__':
-    app.run(debug = True)
 
 @app.route("/")
 def index():
@@ -62,3 +60,5 @@ def check_user_exists(username):
         return False
     else:
         return True
+if __name__ == '__main__':
+    app.run(debug = True)
