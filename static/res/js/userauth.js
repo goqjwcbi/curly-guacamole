@@ -14,19 +14,7 @@ function init(){
 }
 
 function initElements(){
-
-    var returnButtons = document.getElementsByClassName("rt-btn");
-
-    for (let i = 0; i < returnButtons.length; i++) {
-        let bt = returnButtons[i]
-        let sendTo = "/";
-
-        if (bt.getAttribute("data-sendto") != null) {
-            sendTo = bt.getAttribute("data-sendto");
-        }
-
-        bt.addEventListener("click", function() {
-            window.location.href = sendTo;
-        });
-    }
+    document.getElementById("rt-btn").addEventListener("click", function() {
+        window.location.href = "/";
+    });
 }
