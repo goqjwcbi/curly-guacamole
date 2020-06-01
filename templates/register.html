@@ -1,18 +1,23 @@
+<!DOCTYPE html>
+<!-- TODO: update header resource paths for prod -->
 <head>
-  <title> Register </title> 
-  <link rel="stylesheet" href="/login.css">
-
+  <title> Working Title - Register </title>
+  <link rel="shortcut icon" href="../static/res/img/favicon.ico" type="image/vnd">
+  <link rel="stylesheet" href="../static/res/css/global.css" type="text/css">
+  <script src="../static/res/js/userauth.js" type="text/javascript"></script>
 </head>
 
 <body>
-  <div id = "main">
-  <h1> register </h1>
+  <div id = "main" class = "focused-panel userauth-panel">
+  <h1> Register </h1>
   
-  <form  action="/register" method="post">
-	Username: <input id = "username" name="username" type="text" /> <br>
-	Password: <input id = "password" name="password" type="password" /> <br>
-  <br>
-  <input value = "register" id = "button" type="submit" />
+  <form action="/register" method="post">
+    <label> Username: </label>
+    <input id = "username" class = "sweep-to-right" name = "username" type = "text" placeholder = "Username" autocomplete = "off" required />
+    <label> Password: </label>
+    <input id = "password" name = "password" type = "password" placeholder = "Password" minlength = "10" autocomplete = "off" required />
+    <input id = "rt-btn" value = "Cancel" type = "button" />
+    <input value = "Register" id = "submit-btn" type = "submit" />
   </form>
 </div>
 </body>
