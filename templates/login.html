@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<!-- TODO: update header resource paths for prod -->
+<head>
+  <title> Working Title - Login </title>
+  <link rel="shortcut icon" href="../static/res/img/favicon.ico" type="image/vnd">
+  <link rel="stylesheet" href="../static/res/css/global.css" type="text/css">
+  <script src="../static/res/css/userauth.css" type="text/javascript"></script>
+</head>
+
+<body>
+  <div id = "main" class = "focused-panel userauth-panel">
+  <h1> Login </h1>
+  
+  <form action="/login" method="post">
+    <label> Username: </label>
+    <input id = "username" name = "username" type = "text" placeholder = "Username" autocomplete = "on" required/>
+    <label> Password: </label>
+    <input id = "password" name = "password" type = "password" placeholder = "Password" autocomplete = "on" required/>
+    <input id = "rt-btn" value = "Cancel" type = "button" />
+    <input value = "Login" id = "submit-btn" type = "submit" />
+  </form>
+</div>
+</body>
