@@ -1,0 +1,120 @@
+/* 
+ * Global stylesheet for chat webapp project
+ * Version: 1.1
+ * Last Revision: 2020-06-01 by JacobDixon0
+ * Authors: dev@jacobdixon.us (Jacob Dixon)
+ */
+
+:root{
+    --bg-color: lightblue;
+    --txt-color: #111;
+}
+
+*{
+    outline: none;
+}
+
+body{
+    background-color: var(--bg-color);
+    color: var(--txt-color);
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+button, input, a{
+    transition: color 0.2s;
+}
+
+button, input, .a-psbtn{
+    display: block;
+    padding: 8px;
+    border: 0;
+}
+
+button:hover, input:hover, .a-psbtn:hover{
+    filter: brightness(0.9);
+}
+
+button, input[type="submit"], input[type="button"], .a-psbtn{
+    background-color: #4caf50;
+    cursor: pointer;
+}
+
+input{
+    background-color: #ddd;
+}
+
+input:focus{
+    filter: brightness(0.75);
+}
+
+input:disabled{
+    color: var(--txt-color);            
+    filter: brightness(0.5);
+    filter: saturate(0.5);
+    cursor: not-allowed;
+}
+
+a{
+    color: var(--txt-color);
+    text-decoration: none;
+}
+
+a:hover{
+    filter: brightness(2);
+}
+
+.centered{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: 0;
+    transform: translate(-50%, -50%);
+}
+
+.a-psbtn{
+    display: inline-block;
+    text-align: center;
+}
+
+/* ---------------- LOGIN AND REGISTRATION ---------------- */
+
+.panel{
+    padding: 80px;
+    border-radius: 8px;
+    background-color: rgb(241, 241, 241);
+}
+
+.panel *{
+    margin: 8px;
+}
+
+.panel h1{
+    margin-bottom: 16px;
+    text-align: center;
+}
+
+.panel input[type="button"], input[type="submit"]{
+    display: inline;
+    width: calc(50% - 16px);
+}
+
+.panel #rt-btn{
+    float: left;
+}
+
+.panel #submit-btn{
+    float: right;
+}
+
+.panel input:not([type="submit"]):valid{
+    outline: green solid 2px;
+}
+
+.panel input.invalid{
+    outline: red solid 2px !important;
+}
+
+.panel .invalid-label{
+    color: red;
+    font-size: 12px;
+}

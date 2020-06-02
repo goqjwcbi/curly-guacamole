@@ -1,8 +1,14 @@
 <!DOCTYPE html>
+<html>
 <head>
-  <title> ERROR </title>
+  <title>Working Title - {{ error_code }}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="/res/img/favicon.ico" type="image/vnd">
+  <link rel="stylesheet" href="/res/css/global.css" type="text/css">
 </head>
 <body>
-  <h1> something went wrong </h1>
-  <h2> {{ error }} </h2>
+  <h1>Something went wrong...</h1>
+  <h2>{{ error_code }}</h2>
+  <p>{{ error }}</p>
 </body>
+</html>

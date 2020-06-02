@@ -6,6 +6,7 @@ app = Flask(__name__,
             static_url_path='',
             static_folder='static')
 
+app.secret_key = b"secret"
 
 @app.route("/", methods = ["GET"])
 def index():
@@ -21,50 +22,60 @@ def visit_page(page):
 @app.route("/login", methods = ["GET", "POST"])
 def login():
     if request.method == "POST":
-        username = request.args.get("username")
-        password = hashlib.sha256(request.args.get("password")).hexdigest()
+        
+        username = request.form["username"]
+        password = request.form["password"]
+
         conn = sqlite3.connect("guacamole.db")
+        query = "SELECT uname FROM users WHERE uname = ? AND passwd = ?"
         c = conn.cursor()
-        query = "SELECT username FROM users WHERE username = ? AND password = ?"
-        c.execute(query, username, password)
+        c.execute(query, (username, password))
+
         data = c.fetchone()
+
         if data == None:
-            printf("failed to log in as %s" % username)
+            return redirect("/p/login.html" + "?invalid=bad_credentials")
         else:
             session['user'] = username
-        redirect(url_for(""))
+            return redirect(url_for("index"))
+
     else:
-        return "unsupportted method"
+        return error("400", "Bad Request: This method is not supported for this request.")
         
 @app.route("/register", methods = ["GET", "POST"])
 def register():
     if request.method == "POST":
-        username = request.args.get("username")
-        password = request.args.get("password")
+
+        username = request.form["username"]
+        password = request.form["password"]
+
         if not check_user_exists(username):
-            query = "INSERT INTO users VALUES (?, ?)"
-            conn = sqlite3.connect("guacamole.db")
-            c = conn.cursor()
-            c.execute(query, username, password)
-            redirect(url_for(""))
-        else:
-            return error("user already exists")
-    else:
-        return "unsupported method"
+            query = "INSERT into users VALUES(?, ?)"
 
+            db_conn = sqlite3.connect("guacamole.db")
+            db_cursor = db_conn.cursor()
+            db_cursor.execute(query, (username, password))
+            db_conn.commit()
 
-def error(e):
-    return render_template("error.html", error = e)
+            return redirect("/p/login.html")
             
+        else:
+            return redirect("/p/register.html" + "?invalid=uname_taken")
+    else:
+        return error("400", "Bad Request: This method is not supported for this request.")
+
+def error(err_code, err_desc):
+    return render_template("error.html", error_code=err_code, error=err_desc)
+
 def check_user_exists(username):
+    query = "SELECT uname FROM users WHERE uname = ? COLLATE NOCASE"
     conn = sqlite3.connect("guacamole.db")
     c = conn.cursor()
-    query = "SELECT username FROM users WHERE username = ?"
-    c.execute(query, username)
+    c.execute(query, (username,))
+
     data = c.fetchone()
-    if data == None:
-        return False
-    else:
-        return True
+    return (data != None)
+
 if __name__ == '__main__':
-    app.run(debug = True)
+    app.run(debug = True,
+            host="0.0.0.0")

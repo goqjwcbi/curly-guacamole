@@ -1,22 +1,25 @@
 <!DOCTYPE html>
-<!-- TODO: update header resource paths for prod -->
+<html>
 <head>
-  <title> Working Title - Login </title>
-  <link rel="shortcut icon" href="../static/res/img/favicon.ico" type="image/vnd">
-  <link rel="stylesheet" href="../static/res/css/userauth.css" type="text/css">
-  <script src="../static/res/js/userauth.js" type="text/javascript"></script>
+  <title>Working Title - Login</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="/res/img/favicon.ico" type="image/vnd">
+  <link rel="stylesheet" href="/res/css/global.css" type="text/css">
+  <script src="/res/js/userauth.js" type="text/javascript"></script>
 </head>
-
 <body>
-  <div id = "main" class = "focused-panel userauth-panel">
-    <h1> Login </h1>  
-    <form action="/login" method="post">
-      <label> Username: </label>
-      <input id = "username" name = "username" type = "text" placeholder = "Username" autocomplete = "on" required/>
-      <label> Password: </label>
-      <input id = "password" name = "password" type = "password" placeholder = "Password" autocomplete = "on" required/>
-      <input id = "rt-btn" value = "Cancel" type = "button" />
-      <input value = "Login" id = "submit-btn" type = "submit" />
+  <main class="centered panel">
+    <h1>Login</h1>
+    <form action="/login" method="post" onsubmit="return validate()" autocomplete="on">
+      <label for="username">Username:</label>
+      <input id="username" name="username" type="text" placeholder="Username" required>
+      <p id="invalid-username" class="invalid-label" hidden>Invalid Credentials</p>
+      <label for="password">Password:</label>
+      <input id="password" name="password" type="password" placeholder="Password" required>
+      <p id="invalid-password" class="invalid-label" hidden>Invalid Credentials</p>
+      <input id="rt-btn" value="Cancel" type="button">
+      <input value="Login" id="submit-btn" type="submit">
     </form>
-  </div>
+  </main>
 </body>
+</html>
