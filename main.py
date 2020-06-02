@@ -26,7 +26,9 @@ def login():
         username = request.form["username"]
         password = request.form["password"]
 
-        password = hashlib.sha256(username.encode("utf-8")).hexdigest()
+        password = hashlib.sha256(password.encode("utf-8")).hexdigest()
+
+        print(password)
 
         conn = sqlite3.connect("guacamole.db")
         query = "SELECT uname FROM users WHERE uname = ? AND passwd = ?"
@@ -34,6 +36,7 @@ def login():
         c.execute(query, (username, password))
 
         data = c.fetchone()
+        conn.close()
 
         if data == None:
             return redirect("/p/login.html" + "?invalid=bad_credentials")
@@ -51,7 +54,7 @@ def register():
         username = request.form["username"]
         password = request.form["password"]
 
-        password = hashlib.sha256(username.encode("utf-8")).hexdigest()
+        password = hashlib.sha256(password.encode("utf-8")).hexdigest()
 
         if not check_user_exists(username):
             query = "INSERT into users VALUES(?, ?)"
@@ -60,6 +63,7 @@ def register():
             db_cursor = db_conn.cursor()
             db_cursor.execute(query, (username, password))
             db_conn.commit()
+            db_conn.close()
 
             return redirect("/p/login.html")
             
@@ -78,6 +82,8 @@ def check_user_exists(username):
     c.execute(query, (username,))
 
     data = c.fetchone()
+    conn.close()
+
     return (data != None)
 
 if __name__ == '__main__':
