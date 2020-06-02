@@ -26,6 +26,8 @@ def login():
         username = request.form["username"]
         password = request.form["password"]
 
+        password = hashlib.sha256(username.encode("utf-8")).hexdigest()
+
         conn = sqlite3.connect("guacamole.db")
         query = "SELECT uname FROM users WHERE uname = ? AND passwd = ?"
         c = conn.cursor()
@@ -48,6 +50,8 @@ def register():
 
         username = request.form["username"]
         password = request.form["password"]
+
+        password = hashlib.sha256(username.encode("utf-8")).hexdigest()
 
         if not check_user_exists(username):
             query = "INSERT into users VALUES(?, ?)"
