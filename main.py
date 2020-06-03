@@ -8,7 +8,7 @@ app = Flask(__name__,
             static_folder='static')
 
 app.secret_key = b"secret"
-
+messages=[]
 @app.route("/", methods = ["GET"])
 def index():
     if 'user' in session:
@@ -66,8 +66,21 @@ def chat():
     else:
         return render_template("chat.html")
 
+@app.route("/getmsg")
+def getmsg():
+    #get stuff from database, and return it as html or plain text
+    #use<br> for new line
+    htmlstring=""
+    for x in messages:
+        htmlstring+=x
+        htmlstring+="<br>"
+    return htmlstring
+
 def send_msg(username, message):
-    pass  
+    #you can add<br> to the end of each message for new line
+    #for testing i added it to a list
+    messages.append(str(username+": "+message))
+    #pass  
 if __name__ == '__main__':
     app.run(debug = True,
             host="0.0.0.0")
