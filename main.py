@@ -78,7 +78,7 @@ def getmsg():
 
 def send_msg(username, message):
     #you can add<br> to the end of each message for new line
-    #for testing i added it to a list
+    #for now i added it to a list
     messages.append(str(username+": "+message))
     #pass  
 if __name__ == '__main__':
