@@ -12,7 +12,7 @@ messages=[]
 @app.route("/", methods = ["GET"])
 def index():
     if 'user' in session:
-        return "welcome %s" % session['user']
+        return ("welcome %s" % session['user'])+'<br><a href="/chat">Chat</a>'
     else:
         return render_template("index.html")
 
