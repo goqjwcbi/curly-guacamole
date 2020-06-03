@@ -1,6 +1,7 @@
 from flask import *
 import sqlite3
 import hashlib
+from authentication import Authentication
 
 app = Flask(__name__,
             static_url_path='',
@@ -26,23 +27,11 @@ def login():
         username = request.form["username"]
         password = request.form["password"]
 
-        password = hashlib.sha256(password.encode("utf-8")).hexdigest()
-
-        print(password)
-
-        conn = sqlite3.connect("guacamole.db")
-        query = "SELECT uname FROM users WHERE uname = ? AND passwd = ?"
-        c = conn.cursor()
-        c.execute(query, (username, password))
-
-        data = c.fetchone()
-        conn.close()
-
-        if data == None:
-            return redirect("/p/login.html" + "?invalid=bad_credentials")
-        else:
+        if Authentication.login(username, password):
             session['user'] = username
             return redirect(url_for("index"))
+        else:
+            return redirect("/p/login.html" + "?invalid=bad_credentials")
 
     else:
         return error("400", "Bad Request: This method is not supported for this request.")
@@ -54,17 +43,8 @@ def register():
         username = request.form["username"]
         password = request.form["password"]
 
-        password = hashlib.sha256(password.encode("utf-8")).hexdigest()
-
-        if not check_user_exists(username):
-            query = "INSERT into users VALUES(?, ?)"
-
-            db_conn = sqlite3.connect("guacamole.db")
-            db_cursor = db_conn.cursor()
-            db_cursor.execute(query, (username, password))
-            db_conn.commit()
-            db_conn.close()
-
+        if Authentication.register(username, password):
+            print("user logged in as %s" % username)
             return redirect("/p/login.html")
             
         else:
@@ -74,17 +54,6 @@ def register():
 
 def error(err_code, err_desc):
     return render_template("error.html", error_code=err_code, error=err_desc)
-
-def check_user_exists(username):
-    query = "SELECT uname FROM users WHERE uname = ? COLLATE NOCASE"
-    conn = sqlite3.connect("guacamole.db")
-    c = conn.cursor()
-    c.execute(query, (username,))
-
-    data = c.fetchone()
-    conn.close()
-
-    return (data != None)
 
 if __name__ == '__main__':
     app.run(debug = True,
