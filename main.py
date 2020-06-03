@@ -55,6 +55,19 @@ def register():
 def error(err_code, err_desc):
     return render_template("error.html", error_code=err_code, error=err_desc)
 
+@app.route("/chat", methods = ["GET", "POST"])
+def chat():
+    
+    if request.method == "POST":
+        message = request.form["message"]
+        username= session['user']
+        send_msg(username,message)
+        return redirect("/chat")
+    else:
+        return render_template("chat.html")
+
+def send_msg(username, message):
+    pass  
 if __name__ == '__main__':
     app.run(debug = True,
             host="0.0.0.0")
