@@ -6,8 +6,6 @@ class Authentication:
     def login(username, password):
         password = hashlib.sha256(password.encode("utf-8")).hexdigest()
 
-        print(password)
-
         conn = sqlite3.connect("guacamole.db")
         query = "SELECT uname FROM users WHERE uname = ? AND passwd = ?"
         c = conn.cursor()

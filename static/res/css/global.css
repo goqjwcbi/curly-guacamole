@@ -63,6 +63,10 @@ a:hover{
     filter: brightness(2);
 }
 
+iframe{
+    border: 0;
+}
+
 .centered{
     position: absolute;
     top: 50%;
@@ -93,7 +97,7 @@ a:hover{
     text-align: center;
 }
 
-.panel input[type="button"], input[type="submit"]{
+.panel input[type="button"], .panel input[type="submit"]{
     display: inline;
     width: calc(50% - 16px);
 }

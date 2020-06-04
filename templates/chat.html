@@ -2,20 +2,78 @@
 <html>
 <head>
   <title>Chat</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="shortcut icon" href="/res/img/favicon.ico" type="image/vnd">
   <link rel="stylesheet" href="/res/css/global.css" type="text/css">
-  
+  <script>
+    var receivedMessages = []
+
+    updateMessages();
+
+    window.setInterval(function() {
+      updateMessages();
+
+    }, 500);
+
+    function updateMessages() {
+      fetch("/getmsg.json").then(response => response.text()).then(data => {
+      var response = JSON.parse(data);
+      var messages = response.messages;
+
+      for (let i = 0; i < messages.length; i++) {
+        if (!receivedMessages.includes(messages[i].id)) {
+          receivedMessages.push(messages[i].id);
+          var message = document.createElement("span");
+          message.innerHTML = messages[i].author + ": " + messages[i].content.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+          document.getElementById("messages").appendChild(message);
+        }
+      }});
+    }
+    
+    function sendMessage() {
+      var http = new XMLHttpRequest();
+      http.open("POST", "/chat", true);
+      http.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+      var params = "message=" + document.getElementById("message").value;
+      http.send(params);
+      document.getElementById("message").value = "";
+      return true;
+    }
+
+    function keypress(e) {
+      if (e.keyCode == 13) {
+        e.preventDefault();
+        document.getElementById("submit").click();
+      }
+    }
+
+  </script>
+  <style>
+    #messages{
+      height: 400px;
+      max-height: 400px;
+      overflow: auto;
+    }
+
+    #messages span{
+      display: block;
+    }
+
+    #message{
+      display: inline;
+    }
+
+    #submit{
+      display: inline;
+    }
+  </style>
 </head>
-<body>
-    <iframe src="/getmsg"></iframe>
-    <h1>Send message</h1>
+<body onkeypress="return keypress(event)">
+    <div id="messages">
+    </div>
     <form action="/chat" method="post" autocomplete="off">
-      
-      <label for="message">Message:</label>
       <input id="message" name="message" type="text" placeholder="message" >
-      <input id="submit" value="send" type="submit">
+      <input id="submit" value="send" type="button" onclick="sendMessage()">
     </form>
-  
 </body>
 </html>

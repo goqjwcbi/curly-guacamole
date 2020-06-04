@@ -2,13 +2,15 @@ from flask import *
 import sqlite3
 import hashlib
 from authentication import Authentication
+from chat import Chat
+import time
 
 app = Flask(__name__,
             static_url_path='',
             static_folder='static')
 
 app.secret_key = b"secret"
-messages=[]
+
 @app.route("/", methods = ["GET"])
 def index():
     if 'user' in session:
@@ -57,30 +59,54 @@ def error(err_code, err_desc):
 
 @app.route("/chat", methods = ["GET", "POST"])
 def chat():
+
+    if not "user" in session:
+        return redirect("/")
     
     if request.method == "POST":
         message = request.form["message"]
-        username= session['user']
-        send_msg(username,message)
+        username = session['user']
+        send_msg(username, message)
         return redirect("/chat")
     else:
         return render_template("chat.html")
 
-@app.route("/getmsg")
+@app.route("/getmsg.json")
 def getmsg():
-    #get stuff from database, and return it as html or plain text
-    #use<br> for new line
-    htmlstring=""
-    for x in messages:
-        htmlstring+=x
-        htmlstring+="<br>"
-    return htmlstring
+
+    query_delete = "DELETE FROM messages WHERE time < " + str(int(time.time()) - 120)
+    query_select = "SELECT * FROM messages"
+
+    db_conn = sqlite3.connect("guacamole.db")
+    db_cursor = db_conn.cursor()
+    db_cursor.execute(query_delete)
+    db_cursor.execute(query_select)
+
+    messages = db_cursor.fetchall()
+
+    db_conn.close()
+
+    # yeah this is just bad...
+    index = 0
+    json = "{\"messages\":["
+    for message in messages:
+        json += "{"
+        json += "\"id\": \"" + message[0] + "\","
+        json += "\"author\":\"" + message[1] + "\","
+        json += "\"content\":\"" + message[2] + "\","
+        json += "\"time\":\"" + str(message[3]) + "\""
+        json += "}"
+        if index != len(messages) - 1:
+            json += ","
+        index += 1
+    json += "]}"
+    return json
 
 def send_msg(username, message):
     #you can add<br> to the end of each message for new line
     #for now i added it to a list
-    messages.append(str(username+": "+message))
-    #pass  
+    Chat.addmsg(username, message)
+    
 if __name__ == '__main__':
     app.run(debug = True,
             host="0.0.0.0")
