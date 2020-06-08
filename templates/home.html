@@ -5,11 +5,12 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="shortcut icon" href="/res/img/favicon.ico" type="image/x-icon" />
         <link rel="stylesheet" href="/res/css/global.css" type="text/css" />
-        <title>Working Title - {{ error_code }}</title>
+        <title>Working Title - Home</title>
     </head>
     <body>
-        <h1>Something went wrong...</h1>
-        <h2>{{ error_code }}</h2>
-        <p>{{ error_desc }}</p>
+        <h1>You're logged in as: {{ uname }}</h1>
+        <a class="btn" href="/chat">Join Chat</a>
+        <a class="btn" href="/logout">Logout</a>
+        <script src="/res/js/home.js" type="text/javascript"></script>
     </body>
 </html>

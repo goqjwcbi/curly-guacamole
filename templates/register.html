@@ -1,22 +1,26 @@
 <!DOCTYPE html>
-<!-- TODO: update header resource paths for prod -->
-<head>
-  <title> Working Title - Register </title>
-  <link rel="shortcut icon" href="../static/res/img/favicon.ico" type="image/vnd">
-  <link rel="stylesheet" href="../static/res/css/userauth.css" type="text/css">
-  <script src="../static/res/js/userauth.js" type="text/javascript"></script>
-</head>
-
-<body>
-  <div id = "main" class = "focused-panel userauth-panel">
-    <h1> Register </h1>
-    <form action="/register" method="post">
-      <label> Username: </label>
-      <input id = "username" name = "username" type = "text" placeholder = "Username" autocomplete = "off" required />
-      <label> Password: </label>
-      <input id = "password" name = "password" type = "password" placeholder = "Password" minlength = "10" autocomplete = "off" required />
-      <input id = "rt-btn" value = "Cancel" type = "button" />
-      <input value = "Register" id = "submit-btn" type = "submit" />
-    </form>
-  </div>
-</body>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="shortcut icon" href="/res/img/favicon.ico" type="image/x-icon" />
+        <link rel="stylesheet" href="/res/css/global.css" type="text/css" />
+        <title>Working Title - Sign Up</title>
+    </head>
+    <body>
+        <main class="panel centered">
+            <h1>Sign Up</h1>
+            <form action="/register" method="POST" onsubmit="return validate()" autocomplete="on">
+                <label for="uname">Username:</label>
+                <input id="uname" name="uname" type="text" placeholder="Username" required />
+                <p id="invalid-uname" class="invalid-label" minlength="3" hidden>Invalid Credentials</p>
+                <label for="passwd">Password:</label>
+                <input id="passwd" name="passwd" type="password" minlength="3" placeholder="Password" required />
+                <p id="invalid-passwd" class="invalid-label" hidden>Invalid Credentials</p>
+                <input id="cancel" type="button" value="Cancel" />
+                <input id="submit" type="submit" value="Sign Up" />
+            </form>
+        </main>
+        <script src="/res/js/userauth.js" type="text/javascript"></script>
+    </body>
+</html>
