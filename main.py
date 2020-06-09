@@ -74,7 +74,6 @@ def register():
 @app.route("/chat", methods=["GET"])
 def chat():
     if not validate_user(session["user"]):
-        print(session["user"] + " is invalid")
         return redirect(url_for("register"))
 
     return render_template("chat.html")

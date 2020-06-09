@@ -1,4 +1,4 @@
-const ws = new WebSocket("ws://localhost:8090");
+const ws = new WebSocket(`ws://${window.location.hostname}:8090`);
 
 var messageHistory = [];
 
@@ -9,7 +9,6 @@ ws.addEventListener("open", function (event) {
 
 ws.addEventListener("message", function (event) {
     if (event.data == "_update") {
-        console.log("received update alert...");
         updateMessageHistory();
     }
 });
@@ -31,20 +30,18 @@ function addMessage(author, message, special) {
 
     msgSpan.classList.add("message");
     if (special) msgSpan.classList.add(special);
-    msgSpan.innerHTML = `<b>${author}:</b> ${message}`;
+    msgSpan.innerHTML = `<b>${author}</b>: ${message}`;
 
     msgHistory.appendChild(msgSpan);
+    document.getElementById("message-history").scrollTop = document.getElementById("message-history").scrollHeight;
 }
 
 function updateMessageHistory() {
-    console.log("updating...");
     fetch("/api/v1/messages")
         .then((response) => response.text())
         .then((data) => {
             var json = JSON.parse(data);
             var messages = json.messages;
-
-            console.log("parsing response...");
 
             for (message of messages) {
                 if (!messageHistory.includes(message.id)) {
@@ -54,18 +51,12 @@ function updateMessageHistory() {
                         addMessage(message.author, message.content);
                     }
                     messageHistory.push(message.id);
-                    console.log("adding message...");
-                    document.getElementById("message-history").scrollTop = document.getElementById(
-                        "message-history"
-                    ).scrollHeight;
                 }
             }
         });
 }
 
 function submit(event) {
-    console.log("submitting message...");
-
     message = document.getElementById("message-field").value;
 
     var req = new XMLHttpRequest();
@@ -76,7 +67,6 @@ function submit(event) {
 
     if (message != "") {
         req.send(params);
-        console.log("message sent...");
         document.getElementById("message-field").value = "";
         return true;
     }

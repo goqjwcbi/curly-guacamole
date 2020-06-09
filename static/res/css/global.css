@@ -12,8 +12,9 @@ body {
 
 button,
 input,
-a {
-    transition: color 0.2s;
+a,
+.btn {
+    transition: 0.1s;
 }
 
 button,
@@ -25,42 +26,42 @@ input,
     color: #fff;
 }
 
-button:hover,
-input:hover,
-.sbtn:hover {
-    filter: brightness(1.2);
-}
-
 button,
 input[type="submit"],
 input[type="button"],
 .btn {
-    height: 34px;
     background-color: #431a79;
     cursor: pointer;
+}
+
+button:hover,
+input[type="submit"]:hover,
+input[type="button"]:hover,
+.btn:hover {
+    background-color: #582996;
 }
 
 input {
     background-color: #1f0b3a;
 }
 
-input:focus {
-    backdrop-filter: brightness(1.5);
+input:focus,
+input:hover {
+    background-color: #2a1347;
+}
+
+input[type="button"],
+input[type="submit"] {
+    height: 34px;
 }
 
 input:disabled {
-    filter: brightness(0.5);
-    filter: saturate(0.5);
     cursor: not-allowed;
 }
 
 a {
     color: #fff;
     text-decoration: none;
-}
-
-a:hover {
-    filter: brightness(0.75);
 }
 
 .centered {
@@ -79,7 +80,7 @@ a:hover {
 .panel {
     padding: 80px;
     border-radius: 8px;
-    background-color: rgb(31, 7, 27);
+    background-color: rgb(20, 2, 26);
 }
 
 .panel * {
@@ -159,6 +160,11 @@ a:hover {
     vertical-align: top;
 }
 
+#welcome-panel .btn {
+    display: inline-block;
+    width: 100px;
+}
+
 ::-webkit-scrollbar {
     width: 10px;
     height: 10px;
@@ -182,4 +188,17 @@ a:hover {
 
 ::-webkit-resizer {
     display: none;
+}
+
+@media (max-width: 870px) {
+    #welcome-panel .btn {
+        display: block;
+        width: 200px;
+        margin: auto;
+        margin-top: 16px;
+    }
+
+    #message-send #message-field {
+        width: auto;
+    }
 }
