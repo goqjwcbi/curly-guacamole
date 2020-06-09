@@ -41,7 +41,7 @@ def register_user(uname, passwd):
 
 def validate_user(uname):
     if uname != None:
-        query = "SELECT uname FROM users WHERE uname = ?"
+        query = "SELECT uname FROM users WHERE uname = ? COLLATE NOCASE"
 
         db_connect = sqlite3.connect("app.db")
         db_cursor = db_connect.cursor()

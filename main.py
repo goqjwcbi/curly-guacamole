@@ -89,7 +89,7 @@ def api_messages():
         for i, message in enumerate(messages):
             json += "{\"id\":\"" + message[0] + "\","
             json += "\"author\":\"" + message[1] + "\","
-            json += "\"content\":\"" + message[2] + "\","
+            json += "\"content\":\"" + sanitize_json(message[2]) + "\","
             json += "\"time\":\"" + str(message[3]) + "\"}"
 
             if i != len(messages) - 1:
