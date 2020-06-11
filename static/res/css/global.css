@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
 * {
     outline: none;
 }
@@ -7,7 +9,7 @@ body {
     padding: 0;
     background-color: #0b000e;
     color: #fff;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: "Montserrat", sans-serif;
 }
 
 button,
@@ -23,6 +25,8 @@ input,
     display: block;
     padding: 8px;
     border: 0;
+    font-family: "Montserrat", sans-serif;
+    font-size: 16px;
     color: #fff;
 }
 
@@ -52,16 +56,25 @@ input:hover {
 
 input[type="button"],
 input[type="submit"] {
-    height: 34px;
+    height: 35px;
 }
 
 input:disabled {
+    filter: brightness(0.5) saturate(0.5);
     cursor: not-allowed;
 }
 
 a {
     color: #fff;
     text-decoration: none;
+}
+
+a:hover:not(.btn) {
+    color: #aaa;
+}
+
+h1 {
+    font-weight: 400;
 }
 
 .centered {
@@ -72,8 +85,22 @@ a {
     transform: translate(-50%, -50%);
 }
 
+.txt-centered {
+    text-align: center;
+}
+
 .btn {
     display: inline-block;
+    text-align: center;
+}
+
+.wide-block {
+    display: block;
+    width: 240px;
+    box-sizing: border-box;
+}
+
+.txt.wide-block {
     text-align: center;
 }
 
@@ -92,6 +119,10 @@ a {
     text-align: center;
 }
 
+.panel .wide-block {
+    margin: 16px auto;
+}
+
 .panel input[type="button"],
 .panel input[type="submit"] {
     display: inline;
@@ -106,7 +137,7 @@ a {
     float: right;
 }
 
-.panel input:not([type="submit"]):valid {
+.validated input:not([type="submit"]):valid {
     outline: green solid 2px;
 }
 
@@ -125,23 +156,38 @@ a {
 }
 
 .message::before {
-    content: url("/res/img/default_profile_x16.jpg");
+    content: url("/projects/apps/xe3/res/img/default_profile_x16.jpg");
     margin-right: 8px;
+    border-radius: 50%;
     vertical-align: middle;
+    overflow: hidden;
 }
 
 .message.server {
     filter: brightness(0.5);
 }
 
+.message.server::before {
+    content: url("/projects/apps/xe3/res/img/default_server_x16.jpg");
+}
+
+.message.admin::before {
+    content: url("/projects/apps/xe3/res/img/default_admin_x16.jpg");
+}
+
 .message.admin b {
     color: red;
 }
 
+.message.temp {
+    opacity: 0.5;
+}
+
 #message-history {
-    min-height: calc(100vh - 120px);
-    max-height: calc(100vh - 120px);
+    min-height: calc(100vh - 180px);
+    max-height: calc(100vh - 180px);
     overflow: auto;
+    word-wrap: break-word;
 }
 
 #message-send {
@@ -150,19 +196,37 @@ a {
 
 #message-send #message-field {
     display: inline !important;
-    width: 280px;
+    width: calc(100% - 100px);
+    padding: 8px 16px;
+    border-radius: 16px 0 0 16px;
     vertical-align: top;
     font-size: 16px;
 }
 
 #message-send #submit {
     display: inline;
+    margin-left: -4px;
+    border-radius: 0 16px 16px 0;
+    padding: 8px 16px 8px 8px;
     vertical-align: top;
+    background-color: #1f0b3a;
+    font-size: 16px;
+}
+
+#message-send #submit:hover {
+    background-color: #2a1347;
+}
+
+#message-send #submit:disabled,
+#message-send #message-field:disabled,
+#message-send #submit:disabled:hover,
+#message-send #message-field:disabled:hover {
+    background-color: #1f0b3a;
 }
 
 #welcome-panel .btn {
     display: inline-block;
-    width: 100px;
+    width: 116px;
 }
 
 ::-webkit-scrollbar {
@@ -196,9 +260,5 @@ a {
         width: 200px;
         margin: auto;
         margin-top: 16px;
-    }
-
-    #message-send #message-field {
-        width: auto;
     }
 }

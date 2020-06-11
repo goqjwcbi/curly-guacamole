@@ -1,7 +1,6 @@
 from flask import render_template
 
 
-@staticmethod
 def error_page(error_code, error_desc):
 
     if error_desc == None:

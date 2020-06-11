@@ -1,20 +1,25 @@
-const ws = new WebSocket(`ws://${window.location.hostname}:8090`);
+const ws = new WebSocket(`wss://${window.location.hostname}/projects/apps/xe3/api/ws`);
+const room_id = document.getElementById("room-id").innerHTML;
 
 var messageHistory = [];
 
 ws.addEventListener("open", function (event) {
     addMessage("Server", "Connected...", "server");
     updateMessageHistory();
+    setConnected(true);
 });
 
 ws.addEventListener("message", function (event) {
-    if (event.data == "_update") {
+    if (event.data == "_UPDATE") {
         updateMessageHistory();
+    } else if (event.data == "_CLS") {
+        clearMessageHistory();
     }
 });
 
 ws.addEventListener("close", function (event) {
     addMessage("Server", "Disconnected...", "server");
+    setConnected(false);
 });
 
 document.addEventListener("keydown", function (event) {
@@ -37,7 +42,7 @@ function addMessage(author, message, special) {
 }
 
 function updateMessageHistory() {
-    fetch("/api/v1/messages")
+    fetch(`/projects/apps/xe3/api/v1/rooms/${room_id}/messages`)
         .then((response) => response.text())
         .then((data) => {
             var json = JSON.parse(data);
@@ -51,23 +56,62 @@ function updateMessageHistory() {
                         addMessage(message.author, message.content);
                     }
                     messageHistory.push(message.id);
+                    removeTemp();
                 }
             }
         });
+}
+
+function clearMessageHistory() {
+    document.getElementById("message-history").innerHTML = "";
+    messageHistory = [];
+    addMessage("Server", "Message history was cleared by an administrator.", "server");
 }
 
 function submit(event) {
     message = document.getElementById("message-field").value;
 
     var req = new XMLHttpRequest();
-    req.open("POST", "/api/v1/messages", true);
+    req.open("POST", `/projects/apps/xe3/api/v1/rooms/${room_id}/messages`, true);
     req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    req.onload = function () {
+        if (req.status == 400) {
+            addMessage("Server", "Message failed to send...", "server");
+            setConnected(false);
+            ws.close();
+        }
+    };
 
     var params = "message=" + message;
 
-    if (message != "") {
+    if (message == "") {
+        return;
+    }
+
+    if (message.trim() == "_DC") {
+        ws.close();
+    } else {
+        addTemp(message);
         req.send(params);
         document.getElementById("message-field").value = "";
-        return true;
     }
+}
+
+function addTemp(message) {
+    addMessage("you", message, "temp");
+}
+
+function removeTemp() {
+    for (message of document.getElementById("message-history").childNodes) {
+        if (message.classList.contains("temp")) {
+            document.getElementById("message-history").removeChild(message);
+        }
+    }
+}
+
+function setConnected(connected) {
+    document.getElementById("message-field").disabled = !connected;
+    document.getElementById("submit").disabled = !connected;
+    document.getElementById("message-field").placeholder = connected ? "message" : "message (disconnected)";
+    document.getElementById("message-field").value = connected ? document.getElementById("message-field").value : "";
 }

@@ -3,24 +3,24 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="shortcut icon" href="/res/img/favicon.ico" type="image/x-icon" />
-        <link rel="stylesheet" href="/res/css/global.css" type="text/css" />
+        <link rel="shortcut icon" href="/projects/apps/xe3/res/img/favicon.ico" type="image/x-icon" />
+        <link rel="stylesheet" href="/projects/apps/xe3/res/css/global.css" type="text/css" />
         <title>Working Title - Login</title>
     </head>
     <body>
-        <main class="panel centered">
+        <main class="validated panel centered">
             <h1>Login</h1>
-            <form action="/login" method="POST" onsubmit="return validate()" autocomplete="on">
+            <form action="/projects/apps/xe3/login" method="POST" onsubmit="return validate()" autocomplete="on">
                 <label for="uname">Username:</label>
-                <input id="uname" name="uname" type="text" minlength="3" placeholder="Username" required />
+                <input id="uname" name="uname" type="text" minlength="4" placeholder="Username" required />
                 <p id="invalid-uname" class="invalid-label" hidden>Invalid Credentials</p>
                 <label for="passwd">Password:</label>
-                <input id="passwd" name="passwd" type="password" minlength="3" placeholder="Password" required />
+                <input id="passwd" name="passwd" type="password" minlength="4" placeholder="Password" required />
                 <p id="invalid-passwd" class="invalid-label" hidden>Invalid Credentials</p>
                 <input id="cancel" type="button" value="Cancel" />
-                <input id="submit" type="submit" value="Submit" />
+                <input id="submit" type="submit" value="Login" />
             </form>
         </main>
-        <script src="/res/js/userauth.js" type="text/javascript"></script>
+        <script src="/projects/apps/xe3/res/js/userauth.js" type="text/javascript"></script>
     </body>
 </html>

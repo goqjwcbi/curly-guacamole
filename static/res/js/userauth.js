@@ -23,7 +23,7 @@ function initElements() {
     };
 
     document.getElementById("cancel").addEventListener("click", function () {
-        window.location.href = "/";
+        window.location.href = "/projects/apps/xe3/";
     });
 }
 

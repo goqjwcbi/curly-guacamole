@@ -1,5 +1,4 @@
 import sqlite3
-import websocket
 import hashlib
 import time
 import json
@@ -23,7 +22,7 @@ app.secret_key = b"secret"
 
 @app.route("/", methods=["GET"])
 def home():
-    if "user" in session:
+    if "user" in session and validate_user(session["user"]):
         return render_template("home.html", uname=session["user"])
     else:
         return render_template("welcome.html")
@@ -39,18 +38,19 @@ def login():
     passwd = request.form["passwd"]
 
     if not (validate_username(uname) and validate_password(passwd)):
-        return redirect(url_for("login") + "?invalid=bad_credentials")
+        return redirect("https://domain.tld/projects/apps/xe3/login?invalid=bad_credentials")
 
     if authenticate_user(uname, passwd):
         session["user"] = uname
-        return redirect(url_for("home"))
+        return redirect("https://domain.tld/projects/apps/xe3/")
     else:
-        return redirect(url_for("login") + "?invalid=bad_credentials")
+        return redirect("https://domain.tld/projects/apps/xe3/login?invalid=bad_credentials")
 
 
 @app.route("/logout", methods=["GET", "POST"])
 def logout():
-    return redirect(url_for("home") + "?logout=true")
+    session.pop("user", None)
+    return redirect("https://domain.tld/projects/apps/xe3/?logout=true")
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -63,47 +63,83 @@ def register():
     passwd = request.form["passwd"]
 
     if not (validate_username(uname) and validate_password(passwd)):
-        return redirect(url_for("register") + "?invalid=bad_credentials")
+        return redirect("https://domain.tld/projects/apps/xe3/register?invalid=bad_credentials")
 
     if register_user(uname, passwd):
-        return redirect(url_for("home") + "?registered=true")
+        return redirect("https://domain.tld/projects/apps/xe3/?registered=true")
     else:
-        return redirect(url_for("register") + "?invalid=bad_credentials")
+        return redirect("https://domain.tld/projects/apps/xe3/register?invalid=bad_credentials")
 
 
-@app.route("/chat", methods=["GET"])
-def chat():
-    if not validate_user(session["user"]):
-        return redirect(url_for("register"))
+@app.route("/rooms", methods=["GET"])
+def rooms():
+    if not session or not validate_user(session["user"]):
+        return redirect("https://domain.tld/projects/apps/xe3/register")
 
-    return render_template("chat.html")
+    return render_template("rooms.html")
 
 
-@app.route("/api/v1/messages", methods=["GET", "POST"])
-def api_messages():
+@app.route("/rooms/<room_id>", methods=["GET"])
+def room(room_id):
+    if not session or not validate_user(session["user"]):
+        return redirect("https://domain.tld/projects/apps/xe3/register")
+
+    if not validate_room(room_id):
+        return error_page(404, "Room not found"), 404
+
+    return render_template("chat.html", room_id=room_id)
+
+
+@app.route("/api/v1/rooms", methods=["GET", "POST"])
+def api_rooms():
+
+    if not session or not validate_user(session["user"]):
+        return error_page(400, error_desc="Bad Request"), 400
+
+    if request.method == "POST":
+        new_room_id = create_room(session["user"])
+        return new_room_id, 201
+    elif request.method == "GET":
+        rooms = get_rooms(session["user"])
+
+        json = "{\"rooms\":["
+        for i, message in enumerate(rooms):
+            json += "{\"id\":\"" + message[0] + "\"}"
+            if i != len(rooms) - 1:
+                json += ","
+        json += "]}"
+        return json
+
+
+@app.route("/api/v1/rooms/<room_id>/messages", methods=["GET", "POST"])
+def api_room_messages(room_id):
+
+    if not validate_room(room_id):
+        return error_page(404), 404
+
     if request.method == "GET":
-        messages = get_messages()
+        messages = get_messages(room_id)
 
+        # ...what....
         json = "{\"messages\":["
         for i, message in enumerate(messages):
             json += "{\"id\":\"" + message[0] + "\","
-            json += "\"author\":\"" + message[1] + "\","
-            json += "\"content\":\"" + sanitize_json(message[2]) + "\","
-            json += "\"time\":\"" + str(message[3]) + "\"}"
+            json += "\"author\":\"" + message[2] + "\","
+            json += "\"content\":\"" + sanitize_json(message[3]) + "\","
+            json += "\"time\":" + str(message[4]) + "}"
 
             if i != len(messages) - 1:
                 json += ","
         json += "]}"
         return json
-
     elif request.method == "POST":
-        if not validate_user(session["user"] or not validate_input(request.form["message"])):
-            return error_page(400), 400
+        if not session or not validate_user(session["user"] or not validate_input(request.form["message"])):
+            return error_page(400, error_desc="Bad Request"), 400
 
         uname = session["user"]
         message = request.form["message"]
 
-        add_message(uname, message)
+        handle_message(room_id, uname, message)
         return "OK"
 
 

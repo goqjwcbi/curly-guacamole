@@ -2,6 +2,9 @@ import hashlib
 import sqlite3
 import random
 import string
+import re
+
+import utils
 
 
 def authenticate_user(uname, passwd):
@@ -22,7 +25,9 @@ def authenticate_user(uname, passwd):
 
 def register_user(uname, passwd):
     passwd = hashlib.sha256(passwd.encode("utf-8")).hexdigest()
-    id = "".join(random.choice(string.ascii_letters) for i in range(8))
+    id = utils.gen_id()
+
+    uname = re.sub(r"[^a-zA-Z0-9_\-.]", "", uname)
 
     if validate_user(uname):
         return False

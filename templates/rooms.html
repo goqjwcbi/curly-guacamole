@@ -7,14 +7,12 @@
         <link rel="stylesheet" href="/projects/apps/xe3/res/css/global.css" type="text/css" />
         <title>Working Title - Home</title>
     </head>
-    <body>
+    <body onload="init()">
         <main class="centered panel">
-            <h1>You're logged in as: {{ uname }}</h1>
-            <input class="txt wide-block" id="join-room-id" type="text" placeholder="Room ID" minlength="8" />
-            <a class="btn wide-block" href="javascript:void(0)" onclick="joinRoom()">Join Room</a>
+            <h1>Your Rooms</h1>
+            <div id="rooms-list-container"></div>
             <a class="btn wide-block" href="javascript:void(0)" onclick="createRoom()">Create Room</a>
-            <a class="btn wide-block" href="/projects/apps/xe3/rooms">My Rooms</a>
-            <a class="btn wide-block" href="/projects/apps/xe3/logout">Logout</a>
+            <a class="btn wide-block" href="/projects/apps/xe3">Back</a>
         </main>
         <script src="/projects/apps/xe3/res/js/home.js" type="text/javascript"></script>
     </body>

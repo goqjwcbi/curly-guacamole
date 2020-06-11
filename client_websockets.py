@@ -17,17 +17,16 @@ def listen():
 
 async def handle(websocket, path):
     connections.append(websocket)
-    log(f"{websocket.remote_address[0]} ws connected")
+    log(f"{websocket.remote_address[0]} websocket connected - {len(connections)} connection(s) active")
 
     try:
         while True:
             message = await websocket.recv()
-            log(f"{websocket.remote_address[0]} ws message \"{message}\"")
     except Exception as e:
         pass
     finally:
         connections.remove(websocket)
-        log(f"{websocket.remote_address[0]} ws closed")
+        log(f"{websocket.remote_address[0]} websocket closed - {len(connections)} connection(s) active")
 
 
 async def broadcast(message):
